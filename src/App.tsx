@@ -11,7 +11,6 @@ function App() {
 
   return (
     <>
-      <div className='absolute z-[-2] bg-[#E9E9E7] dark:bg-[#242424] min-h-screen top-0 w-screen'></div>
       <Routes>
           <Route path='/' element={<Header/>}>
             <Route index element={<Home/>}/>
