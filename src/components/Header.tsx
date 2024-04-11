@@ -29,18 +29,18 @@ export const Header = () => {
 
   return (
     <>
-      <header className="fixed top-0 z-10 flex items-center justify-between w-full px-4 mx-auto mt-3">
-        <Link to="/">
+      <header className="bg-[#E9E9E7]/75 dark:bg-[#242424]/75 fixed top-0 z-10 flex items-center justify-between w-full px-4 px-auto py-3 max-sm:py-2">
+        <Link to="/" className="w-2/12">
           <Dog className={"size-10 dark:text-gray-50 max-sm:size-8"} />
         </Link>
         <nav
-          className="flex items-center justify-center px-3 text-sm font-medium text-gray-600 dark:text-gray-200 max-sm:hidden"
+          className="flex items-center justify-center w-10/12 px-3 text-sm font-medium text-gray-600 dark:text-gray-200 max-sm:hidden"
         >
           {
             navItems.map((link, index) => (
               <div key={link.title} className="flex items-center justify-center">
                 <Link
-                  className="relative px-4 py-2 uppercase rounded-md bg-gray-50 dark:bg-gray-950 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
+                  className="relative px-4 py-2 uppercase border border-gray-900 rounded-md bg-gray-50 dark:bg-gray-950 dark:hover:text-gray-700 hover:text-gray-200 dark:hover:bg-gray-100 hover:bg-gray-900 dark:border-gray-50"
                   aria-label={link.label}
                   to={link.url}
                 >
@@ -50,13 +50,13 @@ export const Header = () => {
                   index == navItems.length - 1 ?
                     ""
                     :
-                    <span className="bg-gray-50 dark:bg-gray-950 size-2"></span>
+                    <span className="border-gray-900 bg-gray-50 dark:bg-gray-950 size-2 border-y dark:border-gray-50"></span>
                 }
               </div>
             ))
           }
         </nav>
-        <div className="flex items-center gap-2 text-sm font-medium">
+        <div className="flex items-center justify-end w-2/12 gap-2 text-sm font-medium">
           <ThemeToggle />
           <a 
             href="#" 
@@ -65,7 +65,7 @@ export const Header = () => {
           >
             <Menu />
           </a>
-          <a href="#" className="relative px-4 py-2 uppercase rounded-md max-sm:hidden bg-gray-50 dark:bg-gray-950 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900 text-gray-950 dark:text-gray-50">
+          <a href="#" className="relative px-4 py-2 uppercase rounded-md max-sm:hidden dark:bg-gray-50 bg-gray-950 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900 dark:text-gray-950 text-gray-50">
             Acceder
           </a>
         </div>
