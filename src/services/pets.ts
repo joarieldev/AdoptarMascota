@@ -27,3 +27,6 @@ export const getPets = async () => {
 
 }
 
+export const Especie = ["Gato","Perro","Ave","Conejo","Pez","Hamster","Reptil"]
+export const Color = ["Marron","Blanco","Negro","Gris","Azul","Verde","Naranja","Rosa","Rojo"]
+export const Volumen = ["Pequeño","Medio","Grande"]

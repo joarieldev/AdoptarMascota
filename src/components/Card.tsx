@@ -1,14 +1,20 @@
+import { Photo } from "../assets/icons/Photo"
 import { PetWithId, cloudStorage } from "../services/pets"
+import { LazyLoadImage } from 'react-lazy-load-image-component'
 
 export const Card = ({pet}: {pet: PetWithId}) => {
   return (
-    <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-        <div className="relative overflow-auto">
+    <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 h-[470px]">
+        <div className="flex justify-center items-center">
             <div className="h-[289px] w-[289px]">
-                <img className="p-6 h-full w-full object-cover" src={`${cloudStorage}/${pet.foto}`} alt="foto mascota" />
+                <LazyLoadImage 
+                    placeholder={<Photo className="transition-all w-full h-full p-24 dark:text-gray-50 text-gray-900"/>} className=" transition-all p-6 h-full w-full object-cover" 
+                    src={`${cloudStorage}/${pet.foto}`} 
+                    alt="foto mascota" 
+                />
             </div>
         </div>
-        <div className="px-2 pb-6">
+        <div className="px-2 pb-4">
             <h5 className="text-xl text-center font-semibold tracking-tight text-gray-900 dark:text-white">
                 {pet.nombre ? pet.nombre : '-'}
             </h5>
