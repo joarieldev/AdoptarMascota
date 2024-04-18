@@ -1,13 +1,17 @@
+import { Section } from '../components/Section'
+import img2 from '../assets/pets2.webp'
+
+
 export const Home = () => {
   return (
-    <section className="pt-14 flex justify-center">
-      <article className="flex-row text-center mt-14">
-        <h1 className="dark:text-gray-50 text-5xl font-bold">
+    <Section>
+      <article className="flex justify-center items-center flex-col w-full gap-5 max-sm:gap-0">
+        <h1 className="dark:text-gray-50 text-6xl font-bold max-md:text-3xl max-lg:text-5xl tracking-wide">
           ¡Adopta, salva vidas!
         </h1>
-        <p className="flex-1 dark:text-gray-50 text-3xl mt-2 font-bold">Encuentra a tu compañero fiel hoy mismo.</p>
-        <img className="mt-14" src="https://picsum.photos/id/684/600/400" alt="foto" />
+        <p className="dark:text-gray-50 text-3xl mb-4 font-bold xl:mb-8 max-md:text-base max-lg:text-xl">Encuentra a tu compañero fiel hoy mismo.</p>
+        <img className='max-h-[300px] xl:max-h-[450px]' src={img2} alt='img pets' />
       </article>
-    </section>
+    </Section>
   )
 }
