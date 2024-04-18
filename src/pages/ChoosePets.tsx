@@ -21,7 +21,7 @@ export const ChoosePets = () => {
       .finally(() => setIsLoading(false))
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault()
     if (formu.especie !== '' || formu.color !== '' || formu.volumen !== '') {
       let filtrado: PetWithId[] = []
@@ -41,7 +41,7 @@ export const ChoosePets = () => {
     }    
   }
 
-  const handleChange = (event) => {
+  const handleChange = (event: { target: { name: string; value: string; }; }) => {
     setFormu({ ...formu, [event.target.name]: event.target.value })
   }
 
