@@ -1,11 +1,12 @@
 import { X } from "../assets/icons/X"
+import { User } from "../services/pets";
 
 export interface NavList {
   title: string;
   label: string;
   url: string;
 }
-export const SideBar = ({ navList, onClickSidebar, onClickLogin }: { navList: NavList[], onClickSidebar: ()=>void, onClickLogin: ()=>void}) => {
+export const SideBar = ({ navList, onClickSidebar, onClickLogin, onClickSignOut, currentUser }: { navList: NavList[], onClickSidebar: ()=>void, onClickLogin: ()=>void, onClickSignOut: ()=>void, currentUser: User}) => {
 
   return (
     <>
@@ -36,15 +37,28 @@ export const SideBar = ({ navList, onClickSidebar, onClickLogin }: { navList: Na
                 </li>
               ))
             }
-            <li onClick={onClickSidebar}>
-              <a 
-                href="#"
-                className="flex items-center justify-center p-2 text-gray-900 rounded-md dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                onClick={onClickLogin}
-              >
-                Acceder
-              </a>
-            </li>
+            {!currentUser.user && (
+              <li onClick={onClickSidebar}>
+                <a 
+                  href="#"
+                  className="flex items-center justify-center p-2 text-gray-900 rounded-md dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  onClick={onClickLogin}
+                >
+                  Acceder
+                </a>
+              </li>
+            )}
+            {currentUser.user && (
+              <li onClick={onClickSidebar}>
+                <a 
+                  href="#"
+                  className="flex items-center justify-center p-2 text-gray-900 rounded-md dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  onClick={onClickSignOut}
+                >
+                  Salir
+                </a>
+              </li>
+            )}
           </ul>
         </div>
       </div>

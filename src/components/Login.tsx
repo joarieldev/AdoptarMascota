@@ -1,14 +1,20 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { X } from "../assets/icons/X"
-import { User } from "../services/pets";
+import { UserDefault } from "../services/pets";
+import { UserContext } from "../contexts/UserContext";
 
 export const Login = ({onClickLogin}: {onClickLogin: ()=>void}) => {
   const [data, setData] = useState({ user: '', password: ''})
+  const { setCurrentUser } = useContext(UserContext)
   const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault()
     if (data) {
-      const login = data.user === User.user && data.password === User.password
-      alert(login ? 'Logeado':'Usuario no Autenticado')
+      const login = data.user === UserDefault.user && data.password === UserDefault.password
+      if (login) {
+        localStorage.setItem('currentUser', JSON.stringify(data))
+        setCurrentUser(data)
+      }
+      alert(login ? '¡Bienvenido!':'Usuario no encontrado')
       onClickLogin()
     }
   }
@@ -19,10 +25,10 @@ export const Login = ({onClickLogin}: {onClickLogin: ()=>void}) => {
     <>
     <div id="authentication-modal" className="fixed top-0 right-0 left-0 z-40 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full bg-black/70" onClick={onClickLogin}></div> 
     <article className="absolute left-[30%] right-[30%] max-sm:left-[10%] max-sm:right-[10%] max-sm:top-[10%] max-md:top-[15%] md:top-[15%] z-50 xl:top-[25%] xl:left-[40%] xl:right-[40%]">
-      <div className="flex justify-center items-center">
+      <div className="flex items-center justify-center">
         <div className="relative w-full max-h-full">
             <div className="relative bg-[#E9E9E7] rounded-lg shadow dark:bg-gray-950">
-                <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-800">
+                <div className="flex items-center justify-between p-4 border-b rounded-t md:p-5 dark:border-gray-800">
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                       Iniciar Secion
                   </h3>

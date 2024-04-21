@@ -10,6 +10,10 @@ export interface Pet {
 export interface PetWithId extends Pet {
   id: number
 }
+export interface User {
+  user: string
+  password: string
+}
 
 const api = import.meta.env.VITE_API_URL
 export const cloudStorage = import.meta.env.VITE_CLOUD_STORAGE
@@ -24,10 +28,9 @@ export const getPets = async () => {
   }
   const json = await response.json()
   return json
-
 }
 
 export const Especie = ["Gato","Perro","Ave","Conejo","Pez","Hamster","Reptil"]
 export const Color = ["Marron","Blanco","Negro","Gris","Azul","Verde","Naranja","Rosa","Rojo"]
 export const Volumen = ["Pequeño","Medio","Grande"]
-export const User = {user:"jose", password:"jose123"}
+export const UserDefault: User = {user:"jose", password:"jose123"}

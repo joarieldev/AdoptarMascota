@@ -4,10 +4,14 @@ import { Dog } from "../assets/icons/Dog";
 import { SideBar } from "./SideBar";
 import { Link, Outlet } from "react-router-dom";
 import { Login } from "./Login";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../contexts/UserContext";
+import { SignOut } from "../assets/icons/SignOut";
 
 export const Header = () => {
   const [isLogin, setIsLogin] = useState(false)
+  const { currentUser, setCurrentUser } = useContext(UserContext)
+
   const navItems = [
     {
       title: "Mis mascotas",
@@ -36,7 +40,17 @@ export const Header = () => {
   const onClickLogin = () => {
     setIsLogin(!isLogin)
   }
+  useEffect(() => {
+    const userStored = localStorage.getItem('currentUser')
+    if (userStored) {
+      setCurrentUser(JSON.parse(userStored))
+    }
+  }, [])
 
+  const onClickSignOut = () => {
+    localStorage.removeItem('currentUser')
+    setCurrentUser({user:'',password:''})
+  }
   return (
     <>
       <header className="bg-[#E9E9E7]/75 dark:bg-[#242424]/75 fixed top-0 z-10 flex items-center justify-between w-full px-4 px-auto py-3 max-sm:py-2">
@@ -68,6 +82,27 @@ export const Header = () => {
         </nav>
         <div className="flex items-center justify-end w-2/12 gap-2 text-sm font-medium">
           <ThemeToggle />
+          {!currentUser.user && (
+            <a 
+              href="#"
+              className="relative px-4 py-2 text-xs uppercase rounded-md max-sm:hidden dark:bg-gray-50 bg-gray-950 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900 dark:text-gray-950 text-gray-50"
+              onClick={onClickLogin}
+            >
+              Acceder
+            </a>
+          )}
+          {currentUser.user && (
+            <>
+              <a href="#" className="py-2 pl-4 underline hover:text-gray-700 dark:hover:text-gray-200 text-gray-950 dark:text-gray-50">jose</a>
+              <a 
+                href="#"
+                className="flex items-center gap-1 px-4 py-2 text-xs uppercase rounded-md max-sm:hidden dark:bg-gray-50 bg-gray-950 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-red-900 dark:text-gray-950 text-gray-50"
+                onClick={onClickSignOut}
+              >
+                Salir <SignOut className="size-5"/>
+              </a>
+            </>
+          )}
           <a 
             href="#" 
             className="relative px-3 py-2 text-gray-600 rounded-md sm:hidden bg-gray-50 dark:bg-[#030712] hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900 dark:text-gray-200"
@@ -75,18 +110,11 @@ export const Header = () => {
           >
             <Menu />
           </a>
-          <a 
-            href="#"
-            className="relative px-4 py-2 text-xs uppercase rounded-md max-sm:hidden dark:bg-gray-50 bg-gray-950 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900 dark:text-gray-950 text-gray-50"
-            onClick={onClickLogin}
-          >
-            Acceder
-          </a>
         </div>
       </header>
 
       <Outlet/>
-      <SideBar navList={navItems} onClickSidebar={onClickSidebar} onClickLogin={onClickLogin}/>
+      <SideBar navList={navItems} onClickSidebar={onClickSidebar} onClickLogin={onClickLogin} onClickSignOut={onClickSignOut} currentUser={currentUser}/>
       {isLogin && <Login onClickLogin={onClickLogin} />}
 
     </>
