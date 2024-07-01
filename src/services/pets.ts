@@ -16,7 +16,6 @@ export interface User {
 }
 
 const api = import.meta.env.VITE_API_URL
-export const cloudStorage = import.meta.env.VITE_CLOUD_STORAGE
 
 export const getPets = async () => {
   const response = await fetch(`${api}/pets`, {

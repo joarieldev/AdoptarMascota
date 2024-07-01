@@ -4,13 +4,14 @@ import { Dog } from "../assets/icons/Dog";
 import { SideBar } from "./SideBar";
 import { Link, Outlet } from "react-router-dom";
 import { Login } from "./Login";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { SignOut } from "../assets/icons/SignOut";
+import { LoginContext } from "../contexts/LoginContext";
 
 export const Header = () => {
-  const [isLogin, setIsLogin] = useState(false)
   const { currentUser, setCurrentUser } = useContext(UserContext)
+  const { currentLogin, setCurrentLogin } = useContext(LoginContext)
 
   const navItems = [
     {
@@ -38,7 +39,7 @@ export const Header = () => {
     side?.classList[isHidden ? 'remove':'add']('hidden')
   }
   const onClickLogin = () => {
-    setIsLogin(!isLogin)
+    setCurrentLogin(!currentLogin)
   }
   useEffect(() => {
     const userStored = localStorage.getItem('currentUser')
@@ -93,10 +94,10 @@ export const Header = () => {
           )}
           {currentUser.user && (
             <>
-              <a href="#" className="py-2 pl-4 underline hover:text-gray-700 dark:hover:text-gray-200 text-gray-950 dark:text-gray-50">jose</a>
+              <p className="py-2 pl-4 underline hover:text-gray-700 dark:hover:text-gray-200 text-gray-950 dark:text-gray-50">jose</p>
               <a 
                 href="#"
-                className="flex items-center gap-1 px-4 py-2 text-xs uppercase rounded-md max-sm:hidden dark:bg-gray-50 bg-gray-950 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-red-900 dark:text-gray-950 text-gray-50"
+                className="flex items-center gap-1 px-4 py-2 text-xs uppercase rounded-md max-sm:hidden dark:bg-gray-50 bg-gray-950 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-red-50 dark:hover:bg-red-900 dark:text-gray-950 text-gray-50"
                 onClick={onClickSignOut}
               >
                 Salir <SignOut className="size-5"/>
@@ -115,7 +116,7 @@ export const Header = () => {
 
       <Outlet/>
       <SideBar navList={navItems} onClickSidebar={onClickSidebar} onClickLogin={onClickLogin} onClickSignOut={onClickSignOut} currentUser={currentUser}/>
-      {isLogin && <Login onClickLogin={onClickLogin} />}
+      {currentLogin && <Login onClickLogin={onClickLogin} />}
 
     </>
   )
