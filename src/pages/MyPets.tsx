@@ -34,7 +34,7 @@ export const MyPets = () => {
             <>
               <p className="mb-4 text-xl font-bold dark:text-gray-50 xl:mb-8 max-md:text-base max-lg:text-lg">Inicia Sesion para ver tus mascotas.</p>
               <button
-                className="relative px-4 py-2 text-xs uppercase rounded-md max-sm:hidden dark:bg-gray-50 bg-gray-950 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900 dark:text-gray-950 text-gray-50"
+                className="relative px-4 py-2 text-xs uppercase rounded-md dark:bg-gray-50 bg-gray-950 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900 dark:text-gray-950 text-gray-50"
                 onClick={() => {
                   setCurrentLogin(!currentLogin)
                 }}
