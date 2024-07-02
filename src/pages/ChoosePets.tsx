@@ -1,8 +1,9 @@
 import { Section } from "../components/Section"
 import { Card } from '../components/Card';
-import { Color, Especie, PetWithId, Volumen, getPets } from '../services/pets';
+import { Color, Especie, PetWithId, Volumen, getPets, putPets } from '../services/pets';
 import { useEffect, useState } from "react";
 import { Spinner } from "../assets/icons/Spinner";
+import { Toaster, toast } from 'sonner'
 
 export const ChoosePets = () => {
   const [pets, setPets] = useState<PetWithId[]>([])
@@ -47,12 +48,60 @@ export const ChoosePets = () => {
     setFormu({ ...formu, [event.target.name]: event.target.value })
   }
 
+  const handleAdoptar = (id: string) => {
+    const pet = {
+      adoptado: true,
+    }
+
+    const promise = () =>
+      new Promise((resolve) =>
+        putPets(id, pet)
+          .then(() => {
+            setPets(
+              pets.map((p) => {
+                if (p.id === id) {
+                  return { ...p, adoptado: true }
+                }
+                return p
+              })
+            )
+            setFilter(
+              filter.map((p) => {
+                if (p.id === id) {
+                  return { ...p, adoptado: true }
+                }
+                return p
+              })
+            )
+            const adoptados = pets.filter((p) => p.id === id)
+            const storage = localStorage.getItem('pets-adoptados')
+            if(storage) {
+              const data = JSON.parse(storage)
+              data.push(adoptados[0])
+              localStorage.setItem('pets-adoptados', JSON.stringify(data))
+            }else{
+              localStorage.setItem('pets-adoptados', JSON.stringify(adoptados))
+            }
+            resolve(true)
+          })
+          .catch((error) => console.log(error))
+      )
+    toast.promise(promise, {
+      loading: 'Cargando...',
+      success: () => {
+        return `Exito! Has adoptado una mascota`
+      },
+      error: 'Error',
+    })
+  }
+
   useEffect(() => {
     listaMascotas()
   }, [])
   return (
     <Section>
       <>
+        <Toaster position="bottom-right" />
         <article className="sm:p-6 p-2 mx-[8px] mt-10 rounded-lg sm:fixed sm:w-auto max-md:mt-2 bg-white/50 dark:bg-black/70">
           <h3 className="mb-4 text-lg text-center">Filtrar Mascota</h3>
           <form onSubmit={handleSubmit} className="max-w-sm mx-auto w-[270px] max-sm:w-auto">
@@ -106,7 +155,7 @@ export const ChoosePets = () => {
               <p className="text-lg">Sin Resultados</p>
               :
               filter.map((item) => (
-                <Card key={item.id} pet={item} />
+                <Card key={item.id} pet={item} handleAdoptar={handleAdoptar}/>
               ))
             }
           </div>

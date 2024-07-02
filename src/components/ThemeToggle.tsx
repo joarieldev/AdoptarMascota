@@ -1,14 +1,15 @@
-import { useEffect } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Moon } from "../assets/icons/Moon"
 import { Sun } from "../assets/icons/Sun"
 import { System } from "../assets/icons/System"
 
 export const ThemeToggle = () => {
   const THEMES = ["Light", "Dark", "System"]
+  const [menu, setMenu] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
   const onClickToogleBtn = () => {
-    const themesMenu = document.getElementById("themes-menu")
-    const isClosed = !themesMenu?.classList.contains("hidden")
-    themesMenu?.classList[isClosed ? "add" : "remove"]("hidden")
+    setMenu(!menu)
   }
   const onClickMenuOption = (theme: string) => {
     localStorage.setItem("theme", theme.toLowerCase())
@@ -37,11 +38,22 @@ export const ThemeToggle = () => {
   }
   useEffect(()=>{
     updateTheme()
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setMenu(false)
+      }
+    }
+    document.addEventListener('click', handleClickOutside)
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
   })
+  
   return (
-    <div className="relative ml-1 mr-1">
+    <div className="relative ml-1 mr-1" ref={ref}>
       <button
         id="theme-toggle-btn"
+        type="button"
         className="flex transition border-none appearance-none hover:scale-125 dark:text-gray-50"
         onClick={onClickToogleBtn}
       >
@@ -61,7 +73,7 @@ export const ThemeToggle = () => {
       </button>
       <div
         id="themes-menu"
-        className="absolute hidden scale-80 top-8 right-0 text-sm p-1 min-w-[8rem] rounded-md border border-gray-100 bg-white/90 dark:bg-gray-900/90 dark:border-gray-500/20 shadow-[0_3px_10px_rgb(0,0,0,0.2)] backdrop-blur-md"
+        className={`${menu ? 'absolute' : 'hidden'} scale-80 top-8 right-0 text-sm p-1 min-w-[8rem] rounded-md border border-gray-100 bg-white/90 dark:bg-gray-900/90 dark:border-gray-500/20 shadow-[0_3px_10px_rgb(0,0,0,0.2)] backdrop-blur-md`}
       >
         <ul>
           {
@@ -69,7 +81,7 @@ export const ThemeToggle = () => {
               <li 
                 key={index} 
                 onClick={()=>onClickMenuOption(theme)}
-                className="themes-menu-option px-2 py-1.5 cursor-default hover:bg-neutral-400/40 dark:hover:bg-gray-500/50 rounded-sm dark:text-gray-50">
+                className="themes-menu-option px-2 py-1.5 hover:bg-neutral-400/40 dark:hover:bg-gray-500/50 rounded-sm dark:text-gray-50 cursor-pointer">
                 {theme}
               </li>
             ))
