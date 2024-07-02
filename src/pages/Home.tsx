@@ -1,4 +1,5 @@
 import { Section } from '../components/Section'
+import img from '../assets/pets2.webp'
 
 export const Home = () => {
   return (
@@ -8,7 +9,7 @@ export const Home = () => {
           ¡Adopta, salva vidas!
         </h1>
         <p className="mb-4 text-3xl font-bold dark:text-gray-50 xl:mb-8 max-md:text-base max-lg:text-xl">Encuentra a tu compañero fiel hoy mismo.</p>
-        <img className='max-h-[300px] xl:max-h-[450px]' src="/src/assets/pets2.webp" alt='img pets' />
+        <img className='max-h-[300px] xl:max-h-[450px]' src={img} alt='img pets' />
       </article>
     </Section>
   )
