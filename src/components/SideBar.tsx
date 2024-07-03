@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { X } from "../assets/icons/X"
 import { User } from "../services/pets";
 
@@ -27,13 +28,14 @@ export const SideBar = ({ navList, onClickSidebar, onClickLogin, onClickSignOut,
             {
               navList.map((link) => (
                 <li key={link.title}>
-                  <a
+                  <Link
                     className="flex items-center justify-center p-2 text-gray-900 rounded-md dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                    href={link.url}
+                    to={link.url}
                     aria-label={link.label}
+                    onClick={onClickSidebar}
                   >
                     {link.title}
-                  </a>
+                  </Link>
                 </li>
               ))
             }
