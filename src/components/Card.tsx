@@ -4,7 +4,6 @@ import { PetWithId } from "../services/pets"
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { UserContext } from "../contexts/UserContext"
 import { LoginContext } from "../contexts/LoginContext"
-import {Images_Pets} from "../mock/storagePets/storage-pets.ts"
 
 export const Card = ({pet, handleAdoptar}: {pet: PetWithId, handleAdoptar: (id: string)=>void}) => {
     const { currentUser, setCurrentUser } = useContext(UserContext)
@@ -19,21 +18,14 @@ export const Card = ({pet, handleAdoptar}: {pet: PetWithId, handleAdoptar: (id: 
     <div className="w-full max-w-sm bg-white/75 border border-gray-200 rounded-lg dark:bg-gray-800/50 dark:border-gray-700 h-[470px]">
       <div className="flex items-center justify-center">
         <div className="h-[289px] w-[289px]">
-          {Images_Pets.map((item, index) => {
-            if (item.name === pet.foto) {
-              return (
-                <LazyLoadImage
-                  key={index}
-                  placeholder={
-                    <Photo className="w-full h-full p-24 text-gray-900 transition-all dark:text-gray-50" />
-                  }
-                  className="object-cover w-full h-full p-6 transition-all "
-                  src={item.image}
-                  alt={item.name}
-                />
-              )
+          <LazyLoadImage
+            placeholder={
+              <Photo className="w-full h-full p-24 text-gray-900 transition-all dark:text-gray-50" />
             }
-          })}
+            className="object-cover w-full h-full p-6 transition-all "
+            src={`/Pets/${pet.foto}`}
+            alt={pet.nombre}
+          />
         </div>
       </div>
       <div className="px-2 pb-4">

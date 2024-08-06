@@ -4,8 +4,6 @@ import { PetWithId, Recordatorio } from '../services/pets';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
 import { LoginContext } from '../contexts/LoginContext';
-import {Images_Pets} from "../mock/storagePets/storage-pets.ts"
-
 
 export const MyPets = () => {
   const [pets, setPets] = useState<PetWithId[]>([]);
@@ -70,13 +68,7 @@ export const MyPets = () => {
                         <p className='text-sm text-gray-900 dark:text-white'>Nacio el {pets[index]?.fecha_nac}, tiene un pelaje de color {pets[index]?.color} y es de tamaño {pets[index]?.volumen}.</p>
                       </div>
                       <div className='w-full h-[50%] md:h-[400px] 2xl:h-[550px]'>
-                        {Images_Pets.map((item, i) => {
-                          if (item.name === pets[index]?.foto) {
-                            return (
-                              <img key={i} src={item.image} alt={item.name} className='object-cover w-full h-full' />
-                            )
-                          }
-                        })}
+                        <img src={`/Pets/${pets[index]?.foto}`} alt={pets[index]?.nombre} className='object-cover w-full h-full' />
                       </div>
                       <div className='flex items-center justify-center w-full h-full p-2'>
                         {Recordatorio.map((item,i) => (
@@ -91,13 +83,7 @@ export const MyPets = () => {
                         {
                           pets.map((pet,index) => (
                             <button onClick={()=>handleIndex(index)} key={pet.id} className='w-32 h-24 hover:scale-105'>
-                              {Images_Pets.map((item, i) => {
-                                if (item.name === pet.foto) {
-                                  return (
-                                    <img key={i} src={item.image} alt={item.name} className='object-cover w-full h-full' />
-                                  )
-                                }
-                              })}
+                              <img src={`/Pets/${pets[index]?.foto}`} alt={pets[index]?.nombre} className='object-cover w-full h-full' />
                             </button>
                           ))
                         }
