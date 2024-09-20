@@ -1,30 +1,22 @@
 import { Section } from "../components/Section"
 import { Card } from '../components/Card';
 import { Color, Especie, PetWithId, Volumen, getPets, putPets } from '../services/pets';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Spinner } from "../assets/icons/Spinner";
 import { Toaster, toast } from 'sonner'
+import { useQuery } from "@tanstack/react-query";
 
 export const ChoosePets = () => {
-  const [pets, setPets] = useState<PetWithId[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [formu, setFormu] = useState({ especie: '', color: '', volumen: '' })
-  const [filter, setFilter] = useState<PetWithId[]>([])
+  const { isLoading, data: pets = [] } = useQuery<PetWithId[]>({
+    queryKey: ['queryPets'],
+    queryFn: async () => await getPets()
+  })
 
-  const listaMascotas = async () => {
-    setIsLoading(true)
-    await getPets()
-      .then((data: PetWithId[]) => {
-        setPets(data)
-        setFilter(data)
-      })
-      .catch(error => console.log(error))
-      .finally(() => setIsLoading(false))
-  }
+  const [formu, setFormu] = useState({ especie: '', color: '', volumen: '' })
+  const [filter, setFilter] = useState(pets)
 
   const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault()
-    setIsLoading(true)
     if (formu.especie !== '' || formu.color !== '' || formu.volumen !== '') {
       let filtrado: PetWithId[] = []
       if (formu.especie || formu.color || formu.volumen)
@@ -41,7 +33,6 @@ export const ChoosePets = () => {
     }else {
       setFilter(pets)
     }   
-    setIsLoading(false)
   }
 
   const handleChange = (event: { target: { name: string; value: string; }; }) => {
@@ -57,14 +48,6 @@ export const ChoosePets = () => {
       new Promise((resolve) =>
         putPets(id, pet)
           .then(() => {
-            setPets(
-              pets.map((p) => {
-                if (p.id === id) {
-                  return { ...p, adoptado: true }
-                }
-                return p
-              })
-            )
             setFilter(
               filter.map((p) => {
                 if (p.id === id) {
@@ -95,9 +78,6 @@ export const ChoosePets = () => {
     })
   }
 
-  useEffect(() => {
-    listaMascotas()
-  }, [])
   return (
     <Section>
       <>
