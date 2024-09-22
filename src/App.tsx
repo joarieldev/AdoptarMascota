@@ -17,8 +17,8 @@ function App() {
           <Route path='my-pets' element={<MyPets/>}/>
           <Route path='choose-pets' element={<ChoosePets/>}/>
           <Route path='about' element={<About/>}/>
-          <Route path='*' element={<NotFound/>}/>
         </Route>
+        <Route path='*' element={<NotFound/>}/>
       </Routes>
     </>
   )
