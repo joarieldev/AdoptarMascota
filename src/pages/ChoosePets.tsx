@@ -1,7 +1,7 @@
 import { Section } from "../components/Section"
 import { Card } from '../components/Card';
-import { Color, Especie, PetWithId, Volumen, getPets, putPets } from '../services/pets';
-import { useState } from "react";
+import { Color, Especie, Filter, PetWithId, Volumen, getPets, putPets, getAdoptadoList } from '../services/pets';
+import { useEffect, useMemo, useState } from "react";
 import { Spinner } from "../assets/icons/Spinner";
 import { Toaster, toast } from 'sonner'
 import { useQuery } from "@tanstack/react-query";
@@ -13,63 +13,45 @@ export const ChoosePets = () => {
   })
 
   const [formu, setFormu] = useState({ especie: '', color: '', volumen: '' })
-  const [filter, setFilter] = useState(pets)
+  const [filters, setFilters] = useState<Record<string, Filter>>({
+    especie: null,
+    color: null,
+    volumen: null,
+  })
+  const [adoptadoList, setAdoptadoList] = useState<Set<PetWithId['id']>>(new Set())
+
+  const matches = useMemo(()=>{
+    const filtersToApply = Object.values(filters).filter(Boolean)
+    let matches = pets
+    for (const filter of filtersToApply) {
+      matches = matches.filter(filter!)
+    }
+    return matches
+  },[pets, filters])
 
   const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault()
-    if (formu.especie !== '' || formu.color !== '' || formu.volumen !== '') {
-      let filtrado: PetWithId[] = []
-      if (formu.especie || formu.color || formu.volumen)
-        filtrado = pets.filter(pet => pet.especie == formu.especie || pet.color == formu.color || pet.volumen == formu.volumen)
-      if (formu.especie && formu.color)
-        filtrado = pets.filter(pet => pet.especie == formu.especie && pet.color == formu.color)
-      if (formu.especie && formu.volumen)
-        filtrado = pets.filter(pet => pet.especie == formu.especie && pet.volumen == formu.volumen)
-      if (formu.especie && formu.color && formu.volumen) 
-        filtrado = pets.filter(pet => pet.especie == formu.especie && pet.color == formu.color && pet.volumen == formu.volumen)
-      if (formu.color && formu.volumen && !formu.especie) 
-        filtrado = pets.filter(pet => pet.color == formu.color && pet.volumen == formu.volumen)
-      setFilter(filtrado)
-    }else {
-      setFilter(pets)
-    }   
+    const filterEspecie: Filter = formu.especie ? (pet) => pet.especie === formu.especie : null
+    setFilters((filters) => ({ ...filters, especie: filterEspecie }))
+    const filterColor: Filter = formu.color ? (pet) => pet.color === formu.color : null
+    setFilters((filters) => ({ ...filters, color: filterColor }))
+    const filterVolumen: Filter = formu.volumen ? (pet) => pet.volumen === formu.volumen : null
+    setFilters((filters) => ({ ...filters, volumen: filterVolumen }))
   }
 
   const handleChange = (event: { target: { name: string; value: string; }; }) => {
     setFormu({ ...formu, [event.target.name]: event.target.value })
   }
 
-  const handleAdoptar = (id: string) => {
-    const pet = {
-      adoptado: true,
-    }
+  const handleAdoptar = async (pet: PetWithId) => {
+    const draft = structuredClone(adoptadoList)
+    draft.add(pet.id)
+    setAdoptadoList(draft)
+    const array = Array.from(draft)
 
-    const promise = () =>
-      new Promise((resolve) =>
-        putPets(id, pet)
-          .then(() => {
-            setFilter(
-              filter.map((p) => {
-                if (p.id === id) {
-                  return { ...p, adoptado: true }
-                }
-                return p
-              })
-            )
-            const adoptados = pets.filter((p) => p.id === id)
-            const storage = localStorage.getItem('pets-adoptados')
-            if(storage) {
-              const data = JSON.parse(storage)
-              data.push(adoptados[0])
-              localStorage.setItem('pets-adoptados', JSON.stringify(data))
-            }else{
-              localStorage.setItem('pets-adoptados', JSON.stringify(adoptados))
-            }
-            resolve(true)
-          })
-          .catch((error) => console.log(error))
-      )
-    toast.promise(promise, {
+    const res = await putPets(pet, array)
+
+    toast.promise(res, {
       loading: 'Cargando...',
       success: () => {
         return `Exito! Has adoptado una mascota`
@@ -77,6 +59,12 @@ export const ChoosePets = () => {
       error: 'Error',
     })
   }
+
+  useEffect(()=>{
+    const res = getAdoptadoList()
+    const set = new Set<PetWithId['id']>(res)
+    setAdoptadoList(set)
+  },[])
 
   return (
     <Section>
@@ -131,11 +119,11 @@ export const ChoosePets = () => {
             <Spinner/>
           )}
           <div className="top-0 grid grid-cols-3 gap-4 px-6 max-sm:px-0 max-md:flex max-md:flex-col max-lg:grid-cols-2">
-            { filter.length === 0 && !isLoading ?
+            { matches.length === 0 && !isLoading ?
               <p className="text-lg">Sin Resultados</p>
               :
-              filter.map((item) => (
-                <Card key={item.id} pet={item} handleAdoptar={handleAdoptar}/>
+              matches.map((item) => (
+                <Card key={item.id} pet={item} handleAdoptar={handleAdoptar} adoptadoList={adoptadoList}/>
               ))
             }
           </div>

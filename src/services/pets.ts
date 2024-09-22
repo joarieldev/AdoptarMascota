@@ -14,6 +14,7 @@ export interface User {
   user: string
   password: string
 }
+export type Filter = null | ((pet: PetWithId)=>boolean)
 
 const api = import.meta.env.VITE_API_URL
 
@@ -29,17 +30,31 @@ export const getPets = async () => {
   return json
 }
 
-export const putPets = async (id:string, pet: {adoptado: boolean}) => {
-  const response = await fetch(`${api}/pets/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(pet),
-  })
-  if (!response.ok) {
-    throw new Error("Failed to put pet.")
+export const putPets = async (pet: PetWithId, list: Array<string>) => {
+  const promise = () =>
+    new Promise((resolve) => {
+      const storage = localStorage.getItem('pets-adoptados')
+      if(storage) {
+        const data = JSON.parse(storage)
+        data.push(pet)
+        localStorage.setItem('pets-adoptados', JSON.stringify(data))
+      }else{
+        localStorage.setItem('pets-adoptados', JSON.stringify([pet]))
+      }
+      localStorage.setItem('adoptadoList', JSON.stringify(list))
+      
+      resolve(true)
+    })
+    return promise
+}
+
+export const getAdoptadoList = () => {
+  const storage = localStorage.getItem('adoptadoList')
+  let array
+  if (storage) {
+    array = JSON.parse(storage)
   }
-  const json = await response.json()
-  return json
+  return array
 }
 
 export const Especie = ["Gato","Perro","Ave","Conejo","Pez","Hamster","Reptil"]

@@ -1,19 +1,25 @@
-import { useContext, useEffect } from "react"
-import { Photo } from "../assets/icons/Photo"
-import { PetWithId } from "../services/pets"
+import { useContext, useEffect } from 'react'
+import { Photo } from '../assets/icons/Photo'
+import { PetWithId } from '../services/pets'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
-import { UserContext } from "../contexts/UserContext"
-import { LoginContext } from "../contexts/LoginContext"
+import { UserContext } from '../contexts/UserContext'
+import { LoginContext } from '../contexts/LoginContext'
 
-export const Card = ({pet, handleAdoptar}: {pet: PetWithId, handleAdoptar: (id: string)=>void}) => {
-    const { currentUser, setCurrentUser } = useContext(UserContext)
-    const { currentLogin, setCurrentLogin } = useContext(LoginContext)
-    useEffect(() => {
-        const userStored = localStorage.getItem('currentUser')
-        if (userStored) {
-            setCurrentUser(JSON.parse(userStored))
-        }
-    }, [])
+interface Props {
+  pet: PetWithId
+  handleAdoptar: (pet: PetWithId) => void
+  adoptadoList: Set<PetWithId['id']>
+}
+
+export const Card = ({ pet, handleAdoptar, adoptadoList }: Props) => {
+  const { currentUser, setCurrentUser } = useContext(UserContext)
+  const { currentLogin, setCurrentLogin } = useContext(LoginContext)
+  useEffect(() => {
+    const userStored = localStorage.getItem('currentUser')
+    if (userStored) {
+      setCurrentUser(JSON.parse(userStored))
+    }
+  }, [])
   return (
     <div className="w-full max-w-sm bg-white/75 border border-gray-200 rounded-lg dark:bg-gray-800/50 dark:border-gray-700 h-[470px]">
       <div className="flex items-center justify-center">
@@ -43,11 +49,13 @@ export const Card = ({pet, handleAdoptar}: {pet: PetWithId, handleAdoptar: (id: 
           </div>
         </div>
         <div className="flex items-center justify-center">
-          {pet.adoptado ? (
-            <p className="text-lg p-2.5 text-gray-900 dark:text-white">Adoptado</p>
+          {adoptadoList.has(pet.id) ? (
+            <p className="text-lg p-2.5 text-gray-900 dark:text-white">
+              Adoptado
+            </p>
           ) : currentUser.user ? (
             <button
-              onClick={() => handleAdoptar(pet.id)}
+              onClick={() => handleAdoptar(pet)}
               className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:outline-none shadow-md shadow-blue-500/50 dark:shadow-md dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
             >
               Adoptar
