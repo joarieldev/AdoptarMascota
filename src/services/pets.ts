@@ -48,6 +48,27 @@ export const putPets = async (pet: PetWithId, list: Array<string>) => {
     return promise
 }
 
+export const deletePets = async (pet: PetWithId) => {
+  const promise = () =>
+    new Promise((resolve) => {
+      const storage = localStorage.getItem('pets-adoptados')
+      if(storage) {
+        let data: PetWithId[] = JSON.parse(storage)
+        data = data.filter(p => p.id !== pet.id)
+        localStorage.setItem('pets-adoptados', JSON.stringify(data))
+      }
+      const storage2 = localStorage.getItem('adoptadoList')
+      if (storage2) {
+        let data: string[] = JSON.parse(storage2)
+        data= data.filter(item => item !== pet.id)
+        localStorage.setItem('adoptadoList', JSON.stringify(data))
+      }
+      
+      resolve(true)
+    })
+    return promise
+}
+
 export const getAdoptadoList = () => {
   const storage = localStorage.getItem('adoptadoList')
   let array
